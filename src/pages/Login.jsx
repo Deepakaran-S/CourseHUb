@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [role, setRole] = useState('student');
@@ -10,6 +11,7 @@ export default function Login() {
   });
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,11 +20,19 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ ...form, role });
 
-    // TODO: Replace with actual authentication logic
-    // For now, redirect to dashboard
-    navigate('/dashboard');
+    const dummyUser = {
+      name: role === 'student' ? 'John Doe' : 'Prof. Jane Smith',
+      email: form.email,
+      role: role,
+      avatar:
+        role === 'student'
+          ? 'https://i.postimg.cc/3Nmb2TRm/default-avatar.png'
+          : 'https://i.postimg.cc/6Q6n0hNd/instructor-avatar.png',
+    };
+
+    login(dummyUser); // Store user in context/localStorage
+    navigate(role === 'instructor' ? '/teacher-dashboard' : '/student-dashboard');
   };
 
   return (
@@ -32,8 +42,12 @@ export default function Login() {
           ← Back to Home
         </Link>
 
-        <h2 className="text-2xl font-bold text-center mb-1">Welcome back to <span className="text-blue-600">CourseHub</span></h2>
-        <p className="text-center text-gray-500 mb-6 text-sm">Login to continue learning or teaching</p>
+        <h2 className="text-2xl font-bold text-center mb-1">
+          Welcome back to <span className="text-blue-600">CourseHub</span>
+        </h2>
+        <p className="text-center text-gray-500 mb-6 text-sm">
+          Login to continue learning or teaching
+        </p>
 
         {/* Role Selection */}
         <div className="flex justify-center gap-4 mb-6">

@@ -1,49 +1,78 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { User, Mail, Lock, GraduationCap } from 'lucide-react';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { User, Mail, Lock, GraduationCap } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
-  const [role, setRole] = useState('student');
+  const [role, setRole] = useState("student");
   const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     agree: false,
   });
+
+  const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ Use Auth context
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ ...form, role });
-    // Handle registration logic here
+
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const newUser = {
+      name: form.fullName,
+      email: form.email,
+      role,
+      avatar:
+        role === "student"
+          ? "https://i.postimg.cc/3Nmb2TRm/default-avatar.png"
+          : "https://i.postimg.cc/6Q6n0hNd/instructor-avatar.png",
+    };
+
+    login(newUser); // ✅ Save user globally
+    navigate(
+      role === "instructor" ? "/teacher-dashboard" : "/student-dashboard"
+    );
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <Link to="/" className="text-sm text-gray-500 hover:underline mb-4 inline-block">
+        <Link
+          to="/"
+          className="text-sm text-gray-500 hover:underline mb-4 inline-block"
+        >
           ← Back to Home
         </Link>
 
-        <h2 className="text-2xl font-bold text-center mb-1">Join <span className="text-blue-600">CourseHub</span></h2>
-        <p className="text-center text-gray-500 mb-6 text-sm">Create your account and start learning today</p>
+        <h2 className="text-2xl font-bold text-center mb-1">
+          Join <span className="text-blue-600">CourseHub</span>
+        </h2>
+        <p className="text-center text-gray-500 mb-6 text-sm">
+          Create your account and start learning today
+        </p>
 
         {/* Role Selection */}
         <div className="flex justify-center gap-4 mb-6">
           <button
             type="button"
             className={`flex-1 border p-4 rounded-lg text-center ${
-              role === 'student' ? 'border-black' : 'border-gray-300'
+              role === "student" ? "border-black" : "border-gray-300"
             }`}
-            onClick={() => setRole('student')}
+            onClick={() => setRole("student")}
           >
             <User className="mx-auto mb-1" />
             <span className="font-semibold">Student</span>
@@ -52,9 +81,9 @@ export default function Register() {
           <button
             type="button"
             className={`flex-1 border p-4 rounded-lg text-center ${
-              role === 'instructor' ? 'border-black' : 'border-gray-300'
+              role === "instructor" ? "border-black" : "border-gray-300"
             }`}
-            onClick={() => setRole('instructor')}
+            onClick={() => setRole("instructor")}
           >
             <GraduationCap className="mx-auto mb-1" />
             <span className="font-semibold">Instructor</span>
@@ -64,7 +93,10 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
-            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <User
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <input
               type="text"
               name="fullName"
@@ -76,7 +108,10 @@ export default function Register() {
             />
           </div>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <Mail
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <input
               type="email"
               name="email"
@@ -88,7 +123,10 @@ export default function Register() {
             />
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <Lock
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <input
               type="password"
               name="password"
@@ -100,7 +138,10 @@ export default function Register() {
             />
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <Lock
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <input
               type="password"
               name="confirmPassword"
@@ -121,7 +162,14 @@ export default function Register() {
               className="mt-1"
               required
             />
-            I agree to the <a href="#" className="text-blue-600 hover:underline">Terms of Service</a> and <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
+            I agree to the{" "}
+            <a href="#" className="text-blue-600 hover:underline">
+              Terms of Service
+            </a>{" "}
+            and{" "}
+            <a href="#" className="text-blue-600 hover:underline">
+              Privacy Policy
+            </a>
           </label>
 
           <button
@@ -133,8 +181,11 @@ export default function Register() {
         </form>
 
         <p className="text-sm text-center mt-4">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 font-medium hover:underline">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-blue-600 font-medium hover:underline"
+          >
             Sign in here
           </Link>
         </p>
