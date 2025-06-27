@@ -83,7 +83,7 @@ const ActionItem = ({ icon, label }) => (
   </div>
 );
 
-export default function Dashboard() {
+export default function StudentDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -100,7 +100,6 @@ export default function Dashboard() {
       <AnimatePresence>
         {sidebarOpen && (
           <>
-            {/* Dim Background */}
             <motion.div
               onClick={() => setSidebarOpen(false)}
               className="fixed inset-0 bg-black bg-opacity-30 z-40"
@@ -108,8 +107,6 @@ export default function Dashboard() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
-
-            {/* Sidebar Panel */}
             <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -160,16 +157,18 @@ export default function Dashboard() {
 
       {/* Main Dashboard */}
       <main className="flex-1 p-4 sm:p-6 text-gray-900 w-full">
-        <h1 className="text-2xl sm:text-3xl font-bold">Welcome back, John!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">
+          Welcome back, Student!
+        </h1>
         <p className="text-gray-500 mb-6 text-sm sm:text-base">
           Continue your learning journey
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard icon={<FiBookOpen />} label="Enrolled Courses" value="8" />
-          <StatCard icon={<FiClock />} label="Hours Learned" value="124" />
-          <StatCard icon={<FiAward />} label="Certificates" value="3" />
-          <StatCard icon={<FiTrendingUp />} label="Streak Days" value="15" />
+          <StatCard icon={<FiBookOpen />} label="Enrolled Courses" value="4" />
+          <StatCard icon={<FiClock />} label="Hours Learned" value="12h" />
+          <StatCard icon={<FiAward />} label="Certificates" value="2" />
+          <StatCard icon={<FiTrendingUp />} label="Streak Days" value="5" />
         </div>
 
         <div className="mt-10">
@@ -178,16 +177,16 @@ export default function Dashboard() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <CourseProgressCard
-              title="Complete Web Development Bootcamp"
+              title="React for Beginners"
               progress={65}
-              timeLeft="12 hours left"
-              img="/web.jpg"
+              timeLeft="2h left"
+              img="https://source.unsplash.com/1600x900/?code"
             />
             <CourseProgressCard
               title="UI/UX Design Masterclass"
-              progress={30}
-              timeLeft="18 hours left"
-              img="/design.jpg"
+              progress={40}
+              timeLeft="4h left"
+              img="https://source.unsplash.com/1600x900/?design"
             />
           </div>
         </div>
@@ -198,19 +197,19 @@ export default function Dashboard() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <SuggestedCourseCard
-              title="React Basics"
-              instructor="Emma Brown"
-              img="/react.jpg"
+              title="Advanced JavaScript"
+              instructor="Jane Smith"
+              img="https://source.unsplash.com/1600x900/?javascript"
             />
             <SuggestedCourseCard
-              title="Node.js Crash Course"
-              instructor="Liam Carter"
-              img="/node.jpg"
+              title="Figma Crash Course"
+              instructor="John Doe"
+              img="https://source.unsplash.com/1600x900/?figma"
             />
             <SuggestedCourseCard
-              title="Figma Pro Tips"
-              instructor="Sophie Lee"
-              img="/figma.jpg"
+              title="CSS Grid & Flexbox"
+              instructor="Emily White"
+              img="https://source.unsplash.com/1600x900/?css"
             />
           </div>
         </div>
@@ -225,7 +224,7 @@ export default function Dashboard() {
           <div className="bg-white p-5 rounded-lg shadow-sm flex flex-col items-center justify-center text-center">
             <FiTrendingUp className="text-yellow-500 text-4xl mb-2" />
             <h3 className="font-semibold text-lg">Learning Streak!</h3>
-            <p className="text-sm text-gray-500">15 days in a row</p>
+            <p className="text-sm text-gray-500">5 days in a row</p>
           </div>
         </div>
       </main>

@@ -1,3 +1,4 @@
+// src/pages/Login.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
@@ -5,11 +6,8 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [role, setRole] = useState('student');
-  const [form, setForm] = useState({
-    email: '',
-    password: '',
-  });
-
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -18,21 +16,43 @@ export default function Login() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
-    const dummyUser = {
-      name: role === 'student' ? 'John Doe' : 'Prof. Jane Smith',
-      email: form.email,
-      role: role,
-      avatar:
-        role === 'student'
-          ? 'https://i.postimg.cc/3Nmb2TRm/default-avatar.png'
-          : 'https://i.postimg.cc/6Q6n0hNd/instructor-avatar.png',
-    };
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
 
-    login(dummyUser); // Store user in context/localStorage
-    navigate(role === 'instructor' ? '/teacher-dashboard' : '/student-dashboard');
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Login failed");
+        return;
+      }
+
+      login(data); // { user, token }
+
+      const userRole = data.user.role;
+      if (userRole === "teacher" || userRole === "instructor") {
+        navigate("/teacher-dashboard");
+      } else if (userRole === "student") {
+        navigate("/student-dashboard");
+      } else if (userRole === "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/");
+      }
+
+    } catch (err) {
+      console.error("❌ Login error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    }
   };
 
   return (
@@ -49,13 +69,10 @@ export default function Login() {
           Login to continue learning or teaching
         </p>
 
-        {/* Role Selection */}
         <div className="flex justify-center gap-4 mb-6">
           <button
             type="button"
-            className={`flex-1 border p-4 rounded-lg text-center ${
-              role === 'student' ? 'border-black' : 'border-gray-300'
-            }`}
+            className={`flex-1 border p-4 rounded-lg text-center ${role === 'student' ? 'border-black' : 'border-gray-300'}`}
             onClick={() => setRole('student')}
           >
             <span className="font-semibold">Student</span>
@@ -63,15 +80,17 @@ export default function Login() {
           </button>
           <button
             type="button"
-            className={`flex-1 border p-4 rounded-lg text-center ${
-              role === 'instructor' ? 'border-black' : 'border-gray-300'
-            }`}
+            className={`flex-1 border p-4 rounded-lg text-center ${role === 'instructor' ? 'border-black' : 'border-gray-300'}`}
             onClick={() => setRole('instructor')}
           >
             <span className="font-semibold">Instructor</span>
             <p className="text-xs text-gray-500">Access your dashboard</p>
           </button>
         </div>
+
+        {error && (
+          <div className="mb-4 text-sm text-red-500 text-center">{error}</div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">

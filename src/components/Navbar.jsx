@@ -1,29 +1,33 @@
-import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const closeMenu = () => setMenuOpen(false);
 
+  const handleLogout = async () => {
+    await logout();
+    closeMenu();
+    navigate('/');
+  };
+
   return (
     <header className="bg-white fixed top-0 left-0 right-0 z-50 shadow">
       <div className="container mx-auto flex justify-between items-center px-4 py-4">
-        {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-blue-600" onClick={closeMenu}>
           CourseHub
         </Link>
 
-        {/* Hamburger (Mobile) */}
         <div className="md:hidden cursor-pointer" onClick={toggleMenu}>
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </div>
 
-        {/* Navigation */}
         <nav className={`absolute md:static top-16 left-0 w-full md:w-auto bg-white md:bg-transparent md:flex items-center space-y-4 md:space-y-0 md:space-x-6 p-4 md:p-0 transition-all duration-200 ease-in-out ${menuOpen ? 'block' : 'hidden'}`}>
           <Link to="/" className="block text-gray-700 hover:text-blue-600" onClick={closeMenu}>Home</Link>
           <Link to="/courses" className="block text-gray-700 hover:text-blue-600" onClick={closeMenu}>Courses</Link>
@@ -39,11 +43,9 @@ export default function Navbar() {
                   className="w-9 h-9 rounded-full border border-gray-300"
                 />
               </Link>
-              <Link to="/" onClick={closeMenu}>
-              <button onClick={() => { logout(); closeMenu(); }} className="text-red-600 hover:underline">
+              <button onClick={handleLogout} className="text-red-600 hover:underline">
                 Logout
               </button>
-              </Link>
             </div>
           ) : (
             <>

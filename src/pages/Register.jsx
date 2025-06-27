@@ -13,8 +13,9 @@ export default function Register() {
     agree: false,
   });
 
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth(); // ✅ Use Auth context
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -24,40 +25,49 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match");
+    if (!form.agree) {
+      setError("You must agree to the terms and privacy policy.");
       return;
     }
 
-    const newUser = {
-      name: form.fullName,
-      email: form.email,
-      role,
-      avatar:
-        role === "student"
-          ? "https://i.postimg.cc/3Nmb2TRm/default-avatar.png"
-          : "https://i.postimg.cc/6Q6n0hNd/instructor-avatar.png",
-    };
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-    login(newUser); // ✅ Save user globally
-    navigate(
-      role === "instructor" ? "/teacher-dashboard" : "/student-dashboard"
-    );
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.fullName,
+          email: form.email,
+          password: form.password,
+          role,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Registration failed");
+
+      // Auto-login after registration
+      login(data.user);
+      navigate(role === "teacher" ? "/teacher-dashboard" : "/student-dashboard");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
-        <Link
-          to="/"
-          className="text-sm text-gray-500 hover:underline mb-4 inline-block"
-        >
+        <Link to="/" className="text-sm text-gray-500 hover:underline mb-4 inline-block">
           ← Back to Home
         </Link>
-
         <h2 className="text-2xl font-bold text-center mb-1">
           Join <span className="text-blue-600">CourseHub</span>
         </h2>
@@ -65,14 +75,12 @@ export default function Register() {
           Create your account and start learning today
         </p>
 
-        {/* Role Selection */}
+        {/* Role Selector */}
         <div className="flex justify-center gap-4 mb-6">
           <button
             type="button"
-            className={`flex-1 border p-4 rounded-lg text-center ${
-              role === "student" ? "border-black" : "border-gray-300"
-            }`}
             onClick={() => setRole("student")}
+            className={`flex-1 border p-4 rounded-lg ${role === "student" ? "border-black" : "border-gray-300"}`}
           >
             <User className="mx-auto mb-1" />
             <span className="font-semibold">Student</span>
@@ -80,10 +88,8 @@ export default function Register() {
           </button>
           <button
             type="button"
-            className={`flex-1 border p-4 rounded-lg text-center ${
-              role === "instructor" ? "border-black" : "border-gray-300"
-            }`}
-            onClick={() => setRole("instructor")}
+            onClick={() => setRole("teacher")}
+            className={`flex-1 border p-4 rounded-lg ${role === "teacher" ? "border-black" : "border-gray-300"}`}
           >
             <GraduationCap className="mx-auto mb-1" />
             <span className="font-semibold">Instructor</span>
@@ -91,12 +97,10 @@ export default function Register() {
           </button>
         </div>
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
-            <User
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={18}
-            />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="text"
               name="fullName"
@@ -108,10 +112,7 @@ export default function Register() {
             />
           </div>
           <div className="relative">
-            <Mail
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={18}
-            />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="email"
               name="email"
@@ -123,10 +124,7 @@ export default function Register() {
             />
           </div>
           <div className="relative">
-            <Lock
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={18}
-            />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="password"
               name="password"
@@ -138,10 +136,7 @@ export default function Register() {
             />
           </div>
           <div className="relative">
-            <Lock
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={18}
-            />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input
               type="password"
               name="confirmPassword"
@@ -172,6 +167,8 @@ export default function Register() {
             </a>
           </label>
 
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded hover:opacity-90 transition"
@@ -182,10 +179,7 @@ export default function Register() {
 
         <p className="text-sm text-center mt-4">
           Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-blue-600 font-medium hover:underline"
-          >
+          <Link to="/login" className="text-blue-600 font-medium hover:underline">
             Sign in here
           </Link>
         </p>

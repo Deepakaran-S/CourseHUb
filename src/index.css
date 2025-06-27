@@ -2,6 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-.action-card {
-  @apply bg-white hover:bg-blue-50 text-center p-5 rounded-lg shadow transition duration-200 font-medium;
-}
+

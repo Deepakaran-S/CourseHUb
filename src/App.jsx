@@ -11,6 +11,9 @@ import CourseDetail from './pages/CourseDetail';
 import Profile from './pages/Profile';
 import CreateCourse from './pages/CreateCourse';
 import TeacherDashboard from './pages/TeacherDashboard';
+import AboutUs from './pages/AboutUs';
+import { Contact } from 'lucide-react';
+import ContactUs from './pages/ContactUs';
 
 function App() {
   return (
@@ -33,6 +36,10 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/about" element={<AboutUs />} />
+                    <Route path="/contact" element={<ContactUs />} />
+
+
         </Route>
       </Routes>
     </Router>
