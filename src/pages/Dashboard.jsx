@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 import {
   FiBookOpen,
   FiClock,
@@ -132,7 +134,7 @@ export default function StudentDashboard() {
                   <SidebarItem icon={<FiHelpCircle />} label="Help & Support" />
                 </nav>
               </div>
-              <SidebarItem icon={<FiLogOut />} label="Logout" />
+              
             </motion.aside>
           </>
         )}
@@ -152,7 +154,7 @@ export default function StudentDashboard() {
             <SidebarItem icon={<FiHelpCircle />} label="Help & Support" />
           </nav>
         </div>
-        <SidebarItem icon={<FiLogOut />} label="Logout" />
+       
       </aside>
 
       {/* Main Dashboard */}
@@ -180,13 +182,13 @@ export default function StudentDashboard() {
               title="React for Beginners"
               progress={65}
               timeLeft="2h left"
-              img="https://source.unsplash.com/1600x900/?code"
+              img="https://i.postimg.cc/tJPVHf3P/career-card-data-scientist.webp"
             />
             <CourseProgressCard
               title="UI/UX Design Masterclass"
               progress={40}
               timeLeft="4h left"
-              img="https://source.unsplash.com/1600x900/?design"
+              img="https://i.postimg.cc/Hsw7Zqs1/career-card-digitalmarketer.webp"
             />
           </div>
         </div>
@@ -199,17 +201,17 @@ export default function StudentDashboard() {
             <SuggestedCourseCard
               title="Advanced JavaScript"
               instructor="Jane Smith"
-              img="https://source.unsplash.com/1600x900/?javascript"
+              img="https://i.postimg.cc/cLTtZfnD/1565838-e54e-18.webp " 
             />
             <SuggestedCourseCard
               title="Figma Crash Course"
               instructor="John Doe"
-              img="https://source.unsplash.com/1600x900/?figma"
+              img="https://i.postimg.cc/G2CWQTMC/3227583-5e75-6.webp"
             />
             <SuggestedCourseCard
               title="CSS Grid & Flexbox"
               instructor="Emily White"
-              img="https://source.unsplash.com/1600x900/?css"
+              img="https://i.postimg.cc/RF2ny9H4/3600048-b195-20.webp"
             />
           </div>
         </div>

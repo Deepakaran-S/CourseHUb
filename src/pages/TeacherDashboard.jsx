@@ -90,7 +90,7 @@ export default function TeacherDashboard() {
 
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-6 space-y-6 z-0">
-        <h1 className="text-2xl font-bold">Welcome Back, Alexis 🎉</h1>
+        <h1 className="text-2xl font-bold">Welcome Back, Teacher 🎉</h1>
         <p className="text-gray-500 mb-4">Orci pulvinar. Lorem ipsum dolor sit amet consectetur.</p>
 
         {/* Stat Cards */}

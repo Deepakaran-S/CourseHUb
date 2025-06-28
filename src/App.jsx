@@ -8,7 +8,6 @@ import Courses from './pages/Courses';
 import CartPage from './pages/CartPage';
 import PaymentPage from './pages/PaymentPage';
 import CourseDetail from './pages/CourseDetail';
-import Profile from './pages/Profile';
 import CreateCourse from './pages/CreateCourse';
 import TeacherDashboard from './pages/TeacherDashboard';
 import AboutUs from './pages/AboutUs';
@@ -35,7 +34,6 @@ function App() {
           <Route path="/course/:id" element={<CourseDetail />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<AboutUs />} />
                     <Route path="/contact" element={<ContactUs />} />
 

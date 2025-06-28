@@ -26,41 +26,52 @@ export default function Register() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    if (!form.agree) {
-      setError("You must agree to the terms and privacy policy.");
-      return;
-    }
+  if (!form.agree) {
+    setError("You must agree to the terms and privacy policy.");
+    return;
+  }
 
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+  if (form.password !== form.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
 
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.fullName,
-          email: form.email,
-          password: form.password,
-          role,
-        }),
-      });
+  try {
+    const res = await fetch("https://coursehub-backend-5v3n.onrender.com/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        name: form.fullName,
+        email: form.email,
+        password: form.password,
+        role,
+      }),
+    });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Registration failed");
+    const data = await res.json();
+    console.log("🔵 REGISTER RESPONSE:", data);
 
-      // Auto-login after registration
+    if (!res.ok) throw new Error(data.message || "Registration failed");
+
+    // ✅ Check if backend sends: { user: {...}, token: "..." }
+    if (data.user) {
       login(data.user);
-      navigate(role === "teacher" ? "/teacher-dashboard" : "/student-dashboard");
-    } catch (err) {
-      setError(err.message);
+    } else {
+      // if backend sends user directly
+      login(data);
     }
-  };
+
+    navigate(role === "teacher" ? "/teacher-dashboard" : "/student-dashboard");
+  } catch (err) {
+    console.error("❌ Registration error:", err);
+    setError(err.message);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] px-4">

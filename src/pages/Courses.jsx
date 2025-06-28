@@ -2,65 +2,7 @@ import React, { useState } from "react";
 import { ShoppingCart, Search } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
-
-const coursesData = [
-  {
-    id: 1,
-    title: "Full-Stack Web Development Bootcamp",
-    instructor: "Dr. Angela Yu",
-    rating: 4.7,
-    reviews: "441,755",
-    lectures: 374,
-    hours: "61.5 total hours",
-    level: "All Levels",
-    category: "Web Development",
-    price: 569,
-    originalPrice: 3219,
-    image: "https://img-c.udemycdn.com/course/240x135/1565838_e54e_16.jpg",
-  },
-  {
-    id: 2,
-    title: "Complete Web Development Course",
-    instructor: "Hitesh Choudhary",
-    rating: 4.6,
-    reviews: "12,098",
-    lectures: 231,
-    hours: "79.5 total hours",
-    level: "All Levels",
-    category: "Web Development",
-    price: 569,
-    originalPrice: 3199,
-    image: "https://img-c.udemycdn.com/course/240x135/2776760_f176_10.jpg",
-  },
-  {
-    id: 3,
-    title: "Web Developer Bootcamp 2025",
-    instructor: "Colt Steele",
-    rating: 4.7,
-    reviews: "281,363",
-    lectures: 701,
-    hours: "74 total hours",
-    level: "All Levels",
-    category: "Programming",
-    price: 609,
-    originalPrice: 3399,
-    image: "https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg",
-  },
-  {
-    id: 3,
-    title: "Web Developer Bootcamp 2025",
-    instructor: "Colt Steele",
-    rating: 4.7,
-    reviews: "281,363",
-    lectures: 701,
-    hours: "74 total hours",
-    level: "All Levels",
-    category: "Programming",
-    price: 609,
-    originalPrice: 3399,
-    image: "https://img-c.udemycdn.com/course/240x135/625204_436a_3.jpg",
-  },
-];
+import cardData from "../data/cardData.js"
 
 const Courses = () => {
   const [search, setSearch] = useState("");
@@ -69,7 +11,7 @@ const Courses = () => {
   const { addToCart, cart } = useCart();
 
   // FILTERED + SORTED COURSES
-  const filteredCourses = coursesData
+  const filteredCourses = cardData
     .filter((course) =>
       course.title.toLowerCase().includes(search.toLowerCase())
     )
